@@ -3,14 +3,16 @@ using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Async_Inn.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200721214740_SeedData01")]
+    partial class SeedData01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,16 +39,6 @@ namespace Async_Inn.Migrations
                         {
                             Id = 1,
                             Name = "Batcave"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Ceiling Pillows"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Inside-out-microwave"
                         });
                 });
 
@@ -129,18 +121,6 @@ namespace Async_Inn.Migrations
                             Id = 1,
                             Layout = 10,
                             Name = "The Janitor's Closet"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Layout = 6,
-                            Name = "A Windy Tower"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Layout = 10,
-                            Name = "Upside Down Tree"
                         });
                 });
 #pragma warning restore 612, 618
