@@ -10,6 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Async_Inn.Models.Services;
+using Async_Inn.Models.Interfaces;
+using Async_Inn.Controllers;
 
 namespace Async_Inn
 {
@@ -31,6 +34,9 @@ namespace Async_Inn
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddTransient<IHotel, HotelRepository>();
+            services.AddTransient<IRoom, RoomRepository>();
+            services.AddTransient<IAmenity, AmenityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
