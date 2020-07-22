@@ -1,19 +1,37 @@
 # Async-Inn
 
-## Authors
-*Michael Refvem, Paul Rest, Robert Carter*
+## Author
+*Paul Rest*
 
 ## Description
 
-The owners of "Async Inn" have approached you with plans to renovate their hotel chain. Currently they are tracking all the different locations and rooms in spreadsheets and binders. They currently have about 10 binders full of paperwork that consists of the difference between each location and the pricing for each room. The amount of time and paperwork it takes to manage the rooms and locations is costing the company both time and money. They are currently looking for a "better way" to maintain their business model.
+A full CRUD ASP.NET Core Web App that provides an API for a chain of hotels to keep track of their locations, rooms, and those rooms' amenities.
 
 ---
 
 ### Getting Started
 Clone this repository to your local machine.
+
+In a command line environment with Git installed:
+
 ```
-$ git clone GIT_REPO_LINK
+git clone GIT REPO URL HERE
 ```
+
+### To Run the Program from Visual Studio (2019):
+Select ```File``` -> ```Open``` -> ```Project/Solution```
+
+Next navigate to the directory you cloned the repository to.
+
+Double click on the ```Async-Inn``` directory.
+
+Then select and open ```Async-Inn```
+
+Select ```Debug``` -> ```Start Debugging``` to the run the app with the debugger
+
+OR
+
+Select ```Debug``` -> ```Start Without Debugging```
 
 ---
 
@@ -21,11 +39,25 @@ $ git clone GIT_REPO_LINK
 
 #### Entity Relationship Diagram (ERD)
 
-![Entity Relationship Diagram](images/ERD.png)
+##### Student Produced ERD:
+Authors:
+- *Michael Refvem*
+- *Paul Rest* 
+- *Robert Carter*
+![Student ERD](images/Student-ERD.png)
+
+##### Official Code Fellows ERD:
+![Code Fellows ERD](images/CodeFellows-ERD.png)
 
 ---
 
 ### Change Log
 
-1.2: *Added ERD to project (planning database stage)* - 20 Jul 2020  
-1.1: *Initial commit* - 20 Jul 2020
+#### 2020-21-07
+
+- ASP.NET Core Web App framework in place, including DB and seed data. Supports full CRUD through an API client like Postman.
+
+#### 2020-20-07
+
+- Added ERD to project (planning database stage) 
+- Initial commit
