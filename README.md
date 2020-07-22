@@ -7,6 +7,8 @@
 
 A full CRUD ASP.NET Core Web App that provides an API for a chain of hotels to keep track of their locations, rooms, and those rooms' amenities.
 
+Employs dependency injection and interfaces to allow for loose coupling between the controllers and the entities being created/read/updated/deleted.
+
 ---
 
 ### Getting Started
@@ -52,6 +54,10 @@ Authors:
 ---
 
 ### Change Log
+
+#### 2020-22-07
+
+- Controllers are loosely coupled to their entities through dependency injection and interfaces.
 
 #### 2020-21-07
 
