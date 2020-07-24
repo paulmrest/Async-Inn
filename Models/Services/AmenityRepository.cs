@@ -17,33 +17,37 @@ namespace Async_Inn.Models.Services
             _context = context;
         }
 
-        async public Task<List<Amenity>> GetAmenities()
+        public async Task<List<Amenity>> GetAmenities()
         {
             var amenities = await _context.Amenities.ToListAsync();
             return amenities;
         }
 
-        async public Task<Amenity> GetAmenity(int id)
+        public async Task<Amenity> GetAmenity(int id)
         {
             Amenity amenity = await _context.Amenities.FindAsync(id);
+            var amenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
+                                                        .Include(x => x.Room)
+                                                        .ToListAsync();
+            amenity.RoomAmenities = amenities;
             return amenity;
         }
 
-        async public Task<Amenity> Create(Amenity amenity)
+        public async Task<Amenity> Create(Amenity amenity)
         {
             _context.Entry(amenity).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return amenity;
         }
 
-        async public Task<Amenity> Update(Amenity amenity)
+        public async Task<Amenity> Update(Amenity amenity)
         {
             _context.Entry(amenity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return amenity;
         }
 
-        async public Task Delete(int id)
+        public async Task Delete(int id)
         {
             Amenity amenity = await GetAmenity(id);
             _context.Entry(amenity).State = EntityState.Deleted;

@@ -3,14 +3,16 @@ using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Async_Inn.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200723164347_AddedAmenitiesJoinTable")]
+    partial class AddedAmenitiesJoinTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,56 +108,6 @@ namespace Async_Inn.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Async_Inn.Models.HotelRoom", b =>
-                {
-                    b.Property<int>("HotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomNumber")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("PetFriendly")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HotelId", "RoomNumber");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("HotelRooms");
-
-                    b.HasData(
-                        new
-                        {
-                            HotelId = 1,
-                            RoomNumber = 56,
-                            PetFriendly = false,
-                            Rate = 86.66m,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            HotelId = 2,
-                            RoomNumber = 12,
-                            PetFriendly = true,
-                            Rate = 132.19m,
-                            RoomId = 2
-                        },
-                        new
-                        {
-                            HotelId = 3,
-                            RoomNumber = 245,
-                            PetFriendly = false,
-                            Rate = 50.78m,
-                            RoomId = 3
-                        });
-                });
-
             modelBuilder.Entity("Async_Inn.Models.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -192,51 +144,6 @@ namespace Async_Inn.Migrations
                             Layout = 10,
                             Name = "Upside Down Tree"
                         });
-                });
-
-            modelBuilder.Entity("Async_Inn.Models.RoomAmenities", b =>
-                {
-                    b.Property<int>("AmenityId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AmenityId", "RoomId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("RoomAmenities");
-                });
-
-            modelBuilder.Entity("Async_Inn.Models.HotelRoom", b =>
-                {
-                    b.HasOne("Async_Inn.Models.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Async_Inn.Models.Room", "Room")
-                        .WithMany("HotelRooms")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Async_Inn.Models.RoomAmenities", b =>
-                {
-                    b.HasOne("Async_Inn.Models.Amenity", "Amenity")
-                        .WithMany("RoomAmenities")
-                        .HasForeignKey("AmenityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Async_Inn.Models.Room", "Room")
-                        .WithMany("RoomAmenities")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

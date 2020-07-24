@@ -3,14 +3,16 @@ using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Async_Inn.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200723225049_ChangedAmenities")]
+    partial class ChangedAmenities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,33 +129,7 @@ namespace Async_Inn.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("HotelRooms");
-
-                    b.HasData(
-                        new
-                        {
-                            HotelId = 1,
-                            RoomNumber = 56,
-                            PetFriendly = false,
-                            Rate = 86.66m,
-                            RoomId = 1
-                        },
-                        new
-                        {
-                            HotelId = 2,
-                            RoomNumber = 12,
-                            PetFriendly = true,
-                            Rate = 132.19m,
-                            RoomId = 2
-                        },
-                        new
-                        {
-                            HotelId = 3,
-                            RoomNumber = 245,
-                            PetFriendly = false,
-                            Rate = 50.78m,
-                            RoomId = 3
-                        });
+                    b.ToTable("HotelRoom");
                 });
 
             modelBuilder.Entity("Async_Inn.Models.Room", b =>
@@ -233,7 +209,7 @@ namespace Async_Inn.Migrations
                         .IsRequired();
 
                     b.HasOne("Async_Inn.Models.Room", "Room")
-                        .WithMany("RoomAmenities")
+                        .WithMany("Amenities")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
