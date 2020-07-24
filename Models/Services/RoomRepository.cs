@@ -72,15 +72,5 @@ namespace Async_Inn.Models.Services
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
-
-        //public async Task<Room> GetAmenity(int id)
-        //{
-        //    var room = await _context.Rooms.FindAsync(id);
-        //    var amenities = await _context.RoomAmenities.Where(x => x.AmenityId == id)
-        //                                                .Include(x => x.Room)
-        //                                                .ToListAsync();
-        //    room.Amenities = amenities;
-        //    return room;
-        //}
     }
 }

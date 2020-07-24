@@ -71,6 +71,33 @@ namespace Async_Inn.Data
                 }
             );
 
+            modelBuilder.Entity<HotelRoom>().HasData(
+                new HotelRoom
+                {
+                    HotelId = 1,
+                    RoomNumber = 56,
+                    RoomId = 1,
+                    Rate = 86.66m,
+                    PetFriendly = false
+                },
+                new HotelRoom
+                {
+                    HotelId = 2,
+                    RoomNumber = 12,
+                    RoomId = 2,
+                    Rate = 132.19m,
+                    PetFriendly = true
+                },
+                new HotelRoom
+                {
+                    HotelId = 3,
+                    RoomNumber = 245,
+                    RoomId = 3,
+                    Rate = 50.78m,
+                    PetFriendly = false
+                }
+            );
+
             modelBuilder.Entity<Amenity>().HasData(
                 new Amenity
                 {
@@ -97,5 +124,7 @@ namespace Async_Inn.Data
         public DbSet<Amenity> Amenities { get; set; }
 
         public DbSet<RoomAmenities> RoomAmenities { get; set; }
+
+        public DbSet<HotelRoom> HotelRooms { get; set; }
     }
 }
