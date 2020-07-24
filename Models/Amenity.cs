@@ -10,5 +10,7 @@ namespace Async_Inn.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public List<RoomAmenities> RoomAmenities { get; set; }
     }
 }
