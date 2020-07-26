@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Async_Inn.Models.Services
@@ -24,8 +25,21 @@ namespace Async_Inn.Models.Services
 
         public async Task<Hotel> GetHotel(int id)
         {
-            Hotel hotel = await _context.Hotels.FindAsync(id);
+            Hotel hotel = await _context.Hotels.Where(x => x.Id == id)
+                                               .FirstAsync();
+            var hotelRoomsForHotel = await _context.HotelRooms.Where(x => x.HotelId == id)
+                                                              .Include(x => x.Room)
+                                                              .ToListAsync();
+            hotel.HotelRooms = hotelRoomsForHotel;
             return hotel;
+        }
+
+        public async Task<Hotel> GetHotelByName(string hotelName)
+        {
+            int hotelId = await _context.Hotels.Where(x => x.Name == hotelName)
+                                               .Select(x => x.Id)
+                                               .FirstAsync();
+            return await GetHotel(hotelId);
         }
 
         public async Task<Hotel> Create(Hotel hotel)

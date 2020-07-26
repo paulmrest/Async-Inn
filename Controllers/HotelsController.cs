@@ -37,6 +37,14 @@ namespace Async_Inn.Controllers
             return hotel;
         }
 
+        // GET: api/Hotels/5
+        [HttpGet("/api/Hotels/HotelByName/{hotelName}")]
+        public async Task<ActionResult<Hotel>> GetHotelByName(string hotelName)
+        {
+            Hotel hotel = await _hotel.GetHotelByName(hotelName);
+            return hotel;
+        }
+
         // PUT: api/Hotels/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
