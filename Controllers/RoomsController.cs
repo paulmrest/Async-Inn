@@ -17,30 +17,36 @@ namespace Async_Inn.Controllers
     {
         private readonly IRoom _room;
 
+        /// <summary>
+        /// Instantiates a new RoomsController object.
+        /// </summary>
+        /// <param name="hotel">
+        /// IRoom: a repository object that implements the IRoom interface
+        /// </param>
         public RoomsController(IRoom room)
         {
             _room = room;
         }
 
-        // GET: api/Rooms
-        [HttpGet]
+        // GET: /api/Rooms
+        [HttpGet("/api/Rooms")]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _room.GetRooms();
         }
 
-        // GET: api/Rooms/5
-        [HttpGet("{id}")]
+        // GET: /api/Rooms/{id}
+        [HttpGet("/api/Rooms/{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
             Room room = await _room.GetRoom(id);
             return room;
         }
 
-        // PUT: api/Rooms/5
+        // PUT: /api/Rooms/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
+        [HttpPut("/api/Rooms/{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
             if (id != room.Id)
@@ -51,16 +57,17 @@ namespace Async_Inn.Controllers
             return Ok(updatedRoom);
         }
 
-        // POST: api/Rooms
+        // POST: /api/Rooms
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPost("/api/Rooms")]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
             await _room.Create(room);
             return CreatedAtAction("GetRoom", new { id = room.Id }, room);
         }
 
+        // POST: /api/Rooms/{roomId}/Amenity/{amenityId}
         [HttpPost]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> AddRoomAmenity(int roomId, int amenityId)
@@ -69,6 +76,7 @@ namespace Async_Inn.Controllers
             return Ok();
         }
 
+        // DELETE: /api/Rooms/{roomId}/Amenity/{amenityId}
         [HttpDelete]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
@@ -77,8 +85,8 @@ namespace Async_Inn.Controllers
             return Ok();
         }
 
-        // DELETE: api/Rooms/5
-        [HttpDelete("{id}")]
+        // DELETE: /api/Rooms/{id}
+        [HttpDelete("/api/Rooms/{id}")]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             await _room.Delete(id);

@@ -23,24 +23,24 @@ namespace Async_Inn.Controllers
         }
 
         // GET: api/Amenities
-        [HttpGet]
+        [HttpGet("/api/Amenities")]
         public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
         {
             return await _amenity.GetAmenities();
         }
 
-        // GET: api/Amenities/5
-        [HttpGet("{id}")]
+        // GET: /api/Amenities/{id}
+        [HttpGet("/api/Amenities/{id}")]
         public async Task<ActionResult<Amenity>> GetAmenity(int id)
         {
             Amenity amenity = await _amenity.GetAmenity(id);
             return amenity;
         }
 
-        // PUT: api/Amenities/5
+        // PUT: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
+        [HttpPut("/api/Amenities/{id}")]
         public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
         {
             if (id != amenity.Id)
@@ -51,18 +51,18 @@ namespace Async_Inn.Controllers
             return Ok(updatedAmenity);
         }
 
-        // POST: api/Amenities
+        // POST: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPost("/api/Amenities/{id}")]
         public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
         {
             await _amenity.Create(amenity);
             return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
         }
 
-        // DELETE: api/Amenities/5
-        [HttpDelete("{id}")]
+        // DELETE: /api/Amenities/{id}
+        [HttpDelete("/api/Amenities/{id}")]
         public async Task<ActionResult<Amenity>> DeleteAmenity(int id)
         {
             await _amenity.Delete(id);

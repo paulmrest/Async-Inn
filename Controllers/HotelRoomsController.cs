@@ -18,35 +18,39 @@ namespace Async_Inn.Controllers
     {
         private readonly IHotelRoom _hotelRoom;
 
-        //private readonly AsyncInnDbContext _context;
-
+        /// <summary>
+        /// Instantiates a new HotelRoomsController object.
+        /// </summary>
+        /// <param name="hotelRoom">
+        /// IHotelRoom: a repository object that implements the IHotelRoom interface
+        /// </param>
         public HotelRoomsController(IHotelRoom hotelRoom)
         {
             _hotelRoom = hotelRoom;
         }
 
         // GET: api/HotelRooms
-        [HttpGet]
+        [HttpGet("/api/Hotels/")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms()
         {
             return await _hotelRoom.GetHotelRooms();
         }
 
-        //GET: api/Hotel/{hotelId}/Rooms
+        //GET: /api/Hotel/{hotelId}/Rooms
         [HttpGet("/api/Hotels/{hotelId}/Rooms")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetRoomsForHotel(int hotelId)
         {
             return await _hotelRoom.GetHotelRoomsForHotel(hotelId);
         }
 
-        //GET: api/Hotel/{hotelId}/Rooms
+        //GET: /api/Hotels/{hotelId}/Rooms/{hotelNumber}
         [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<ActionResult<IEnumerable<HotelRoom>>> GetRoomDetails(int hotelId, int roomNumber)
+        public async Task<ActionResult<HotelRoom>> GetRoomDetails(int hotelId, int roomNumber)
         {
-            return await _hotelRoom.GetHotelRoomsForHotel(hotelId);
+            return await _hotelRoom.GetRoomDetails(hotelId, roomNumber);
         }
 
-        // PUT: api/HotelRooms/5
+        // PUT: /api/Hotels/{hotelId}/Rooms/{roomNumber}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
@@ -60,7 +64,7 @@ namespace Async_Inn.Controllers
             return Ok(updatedHotelRoom);
         }
 
-        // POST: api/HotelRooms
+        // POST: /api/Hotels/{hotelId}/Rooms/
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("/api/Hotels/{hotelId}/Rooms/")]
@@ -71,7 +75,7 @@ namespace Async_Inn.Controllers
             return CreatedAtAction("GetHotelRoom", new { hotelId = hotelRoom.HotelId, roomId = hotelRoom.RoomId }, hotelRoom);
         }
 
-        // DELETE: api/HotelRooms/5
+        // DELETE: /api/Hotels/{hotelId}/Rooms/{roomNumber}
         [HttpDelete("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoom>> DeleteHotelRoom(int hotelId, int roomNumber)
         {
