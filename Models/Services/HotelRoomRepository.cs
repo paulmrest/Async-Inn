@@ -48,7 +48,7 @@ namespace Async_Inn.Models.Services
         /// <returns>
         /// Task<HotelRoom>: a single HotelRoom object embedded in a Task object
         /// </returns>
-        public async Task<HotelRoom> GetHotelRoom(int hotelId, int roomNumber)
+        public async Task<HotelRoom> GetHotelRoomWithoutDetails(int hotelId, int roomNumber)
         {
             HotelRoom hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);
             return hotelRoom;
@@ -79,7 +79,9 @@ namespace Async_Inn.Models.Services
         /// </summary>
         /// <param name="hotelId"></param>
         /// <param name="roomNumber"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// Task<HotelRoom>: a HotelRoom object embedded in a Task object
+        /// </returns>
         public async Task<HotelRoom> GetRoomDetails(int hotelId, int roomNumber)
         {
             var hotelRoom = await _context.HotelRooms.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
@@ -87,7 +89,7 @@ namespace Async_Inn.Models.Services
                                                      .Include(x => x.Room)
                                                      .ThenInclude(x => x.RoomAmenities)
                                                      .ThenInclude(x => x.Amenity)
-                                                     .FirstAsync();
+                                                     .FirstOrDefaultAsync();
             return hotelRoom;
         }
 
@@ -100,8 +102,9 @@ namespace Async_Inn.Models.Services
         /// <returns>
         /// Task<HotelRoom>: the parameter HotelRoom object after saving it to the database
         /// </returns>
-        public async Task<HotelRoom> Create(HotelRoom hotelRoom)
+        public async Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId)
         {
+            hotelRoom.HotelId = hotelId;
             _context.Entry(hotelRoom).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return hotelRoom;
@@ -132,10 +135,12 @@ namespace Async_Inn.Models.Services
         /// <param name="roomNumber">
         /// int: the roomNumber of HotelRoom to be deleted
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        /// Task: an empty Task object
+        /// </returns>
         public async Task Delete(int hotelId, int roomNumber)
         {
-            HotelRoom hotelRoom = await GetHotelRoom(hotelId, roomNumber);
+            HotelRoom hotelRoom = await GetHotelRoomWithoutDetails(hotelId, roomNumber);
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
