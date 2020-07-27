@@ -9,7 +9,7 @@ A full CRUD ASP.NET Core Web App that provides an API for a chain of hotels to k
 
 Employs dependency injection and interfaces to allow for loose coupling between the controllers and the entities being created/read/updated/deleted.
 
-Partially implements navigation properties and routing. In place for Rooms<-->RoomAmenities<-->Amenities. Not yet in place for Hotel<-->HotelRoom<-->Room. Code is presently broken and won't compile (problem files are HotelRoomRepository.cs, lines 33-39, and HotelRoomsController.cs, lines 36-42).
+Implements navigation properties and routing with the join table RoomAmenities linking Rooms and Amenities, and the join table (with payload) HotelRooms linking Hotels and Rooms.
 
 ---
 
@@ -56,6 +56,14 @@ Authors:
 ---
 
 ### Change Log
+
+#### 2020-26-07
+
+- HotelRooms implementation completed.
+
+#### 2020-25-07
+
+- Most of HotelRooms implementation complete.
 
 #### 2020-23-07
 
