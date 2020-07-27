@@ -44,6 +44,13 @@ namespace Async_Inn.Controllers
         }
 
         //GET: /api/Hotels/{hotelId}/Rooms/{hotelNumber}
+        [HttpGet("/api/Hotels/{hotelId}/Rooms/NoDetails/{roomNumber}")]
+        public async Task<ActionResult<HotelRoom>> GetRoomWithoutDetails(int hotelId, int roomNumber)
+        {
+            return await _hotelRoom.GetHotelRoomWithoutDetails(hotelId, roomNumber);
+        }
+
+        //GET: /api/Hotels/{hotelId}/Rooms/{hotelNumber}
         [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoom>> GetRoomDetails(int hotelId, int roomNumber)
         {
@@ -70,8 +77,7 @@ namespace Async_Inn.Controllers
         [HttpPost("/api/Hotels/{hotelId}/Rooms/")]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom, int hotelId)
         {
-            hotelRoom.HotelId = hotelId;
-            await _hotelRoom.Create(hotelRoom);
+            await _hotelRoom.Create(hotelRoom, hotelId);
             return CreatedAtAction("GetHotelRoom", new { hotelId = hotelRoom.HotelId, roomId = hotelRoom.RoomId }, hotelRoom);
         }
 

@@ -9,13 +9,13 @@ namespace Async_Inn.Models.Interfaces
     {
         Task<List<HotelRoom>> GetHotelRooms();
 
-        Task<HotelRoom> GetHotelRoom(int hotelId, int roomNumber);
+        Task<HotelRoom> GetHotelRoomWithoutDetails(int hotelId, int roomNumber);
 
         Task<List<HotelRoom>> GetHotelRoomsForHotel(int hotelId);
 
         Task<HotelRoom> GetRoomDetails(int hotelId, int roomNumber);
 
-        Task<HotelRoom> Create(HotelRoom hotelRoom);
+        Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId);
 
         Task<HotelRoom> Update(HotelRoom hotelRoom);
 
