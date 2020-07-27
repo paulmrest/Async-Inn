@@ -16,10 +16,6 @@ namespace Async_Inn.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
-
-            modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.AmenityId, x.RoomId });
-
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
                 {
@@ -115,6 +111,28 @@ namespace Async_Inn.Data
                     Name = "Inside-out-microwave"
                 }
             );
+
+            modelBuilder.Entity<RoomAmenities>().HasData(
+                new RoomAmenities
+                {
+                    AmenityId = 1,
+                    RoomId = 1
+                },
+               new RoomAmenities
+               {
+                   AmenityId = 2,
+                   RoomId = 2
+               },
+               new RoomAmenities
+               {
+                   AmenityId = 3,
+                   RoomId = 3
+               }
+            );
+
+            modelBuilder.Entity<HotelRoom>().HasKey(x => new { x.HotelId, x.RoomNumber });
+
+            modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.AmenityId, x.RoomId });
         }
 
         public DbSet<Hotel> Hotels { get; set; }

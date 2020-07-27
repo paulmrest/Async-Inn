@@ -17,30 +17,44 @@ namespace Async_Inn.Controllers
     {
         private readonly IHotel _hotel;
 
+        /// <summary>
+        /// Instantiates a new HotelsController object.
+        /// </summary>
+        /// <param name="hotel">
+        /// IHotel: a repository object that implements the IHotel interface
+        /// </param>
         public HotelsController(IHotel hotel)
         {
             _hotel = hotel;
         }
 
-        // GET: api/Hotels
-        [HttpGet]
+        // GET: /api/Hotels
+        [HttpGet("/api/Hotels")]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels(int id)
         {
             return await _hotel.GetHotels();
         }
 
-        // GET: api/Hotels/5
-        [HttpGet("{id}")]
+        // GET: /api/Hotels/{id}
+        [HttpGet("/api/Hotels/{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
             Hotel hotel = await _hotel.GetHotel(id);
             return hotel;
         }
 
-        // PUT: api/Hotels/5
+        // GET: /api/Hotels/HotelByName/{hotelName}
+        [HttpGet("/api/Hotels/HotelByName/{hotelName}")]
+        public async Task<ActionResult<Hotel>> GetHotelByName(string hotelName)
+        {
+            Hotel hotel = await _hotel.GetHotelByName(hotelName);
+            return hotel;
+        }
+
+        // PUT: /api/Hotels/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
+        [HttpPut("/api/Hotels/{id}")]
         public async Task<IActionResult> PutHotel(int id, Hotel hotel)
         {
             if (id != hotel.Id)
@@ -51,18 +65,18 @@ namespace Async_Inn.Controllers
             return Ok(updatedhotel);
         }
 
-        // POST: api/Hotels
+        // POST: /api/Hotels/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPost("/api/Hotels/{id}")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
             await _hotel.Create(hotel);
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
 
-        // DELETE: api/Hotels/5
-        [HttpDelete("{id}")]
+        // DELETE: /api/Hotels/{id}
+        [HttpDelete("/api/Hotels/{id}")]
         public async Task<ActionResult<Hotel>> DeleteHotel(int id)
         {
             await _hotel.Delete(id);

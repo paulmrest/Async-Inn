@@ -13,17 +13,38 @@ namespace Async_Inn.Models.Services
     {
         private AsyncInnDbContext _context;
 
+        /// <summary>
+        /// Instantiates a new RoomRepository object.
+        /// </summary>
+        /// <param name="context">
+        /// AsyncInnDbContext: an object that inherits from DbContext
+        /// </param>
         public RoomRepository(AsyncInnDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets all rooms.
+        /// </summary>
+        /// <returns>
+        /// Task<List<Room>>: a List of Rooms embedded in a Task object
+        /// </returns>
         public async Task<List<Room>> GetRooms()
         {
             var rooms = await _context.Rooms.ToListAsync();
             return rooms;
         }
 
+        /// <summary>
+        /// Gets a specific room by id.
+        /// </summary>
+        /// <param name="id">
+        /// int: a Room id
+        /// </param>
+        /// <returns>
+        /// Task<Room>: a Room object embedded in a Task object
+        /// </returns>
         public async Task<Room> GetRoom(int id)
         {
             Room room = await _context.Rooms.FindAsync(id);
@@ -34,6 +55,15 @@ namespace Async_Inn.Models.Services
             return room;
         }
 
+        /// <summary>
+        /// Adds a Room object to the database.
+        /// </summary>
+        /// <param name="room">
+        /// Room: a Room object
+        /// </param>
+        /// <returns>
+        /// Task<Room>: the parameter Room object after being added to the database, embedded in a Task object
+        /// </returns>
         public async Task<Room> Create(Room room)
         {
             _context.Entry(room).State = EntityState.Added;
@@ -41,6 +71,15 @@ namespace Async_Inn.Models.Services
             return room;
         }
 
+        /// <summary>
+        /// Updates a Room object in the database.
+        /// </summary>
+        /// <param name="room">
+        /// Room: the Room object with updated information
+        /// </param>
+        /// <returns>
+        /// Task<Room>: the updated Room object embedded in a Task object
+        /// </returns>
         public async Task<Room> Update(Room room)
         {
             _context.Entry(room).State = EntityState.Modified;
@@ -48,6 +87,15 @@ namespace Async_Inn.Models.Services
             return room;
         }
 
+        /// <summary>
+        /// Deletes a Room object from the database.
+        /// </summary>
+        /// <param name="id">
+        /// int: the id of the Room to be deleted
+        /// </param>
+        /// <returns>
+        /// Task: an empty Task object
+        /// </returns>
         public async Task Delete(int id)
         {
             Room room = await GetRoom(id);
@@ -55,6 +103,18 @@ namespace Async_Inn.Models.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds an Amenity to a Room
+        /// </summary>
+        /// <param name="amenityId">
+        /// int: an Amenity id
+        /// </param>
+        /// <param name="roomId">
+        /// int: a Room id
+        /// </param>
+        /// <returns>
+        /// Task: an empty Task object
+        /// </returns>
         public async Task AddAmenityToRoom(int amenityId, int roomId)
         {
             RoomAmenities roomAmenities = new RoomAmenities()
@@ -66,6 +126,18 @@ namespace Async_Inn.Models.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Removes an Amenity from a Room.
+        /// </summary>
+        /// <param name="amenityId">
+        /// int: an Amenity id
+        /// </param>
+        /// <param name="roomId">
+        /// int: a Room id
+        /// </param>
+        /// <returns>
+        /// Task: an Empty Task object
+        /// </returns>
         public async Task RemoveAmenityFromRoom(int amenityId, int roomId)
         {
             var result = await _context.RoomAmenities.FirstOrDefaultAsync(x => x.AmenityId == amenityId && x.RoomId == roomId);
