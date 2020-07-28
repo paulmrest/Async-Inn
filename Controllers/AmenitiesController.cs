@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Models.Interfaces;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Controllers
 {
@@ -24,46 +25,45 @@ namespace Async_Inn.Controllers
 
         // GET: api/Amenities
         [HttpGet("/api/Amenities")]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
             return await _amenity.GetAmenities();
         }
 
         // GET: /api/Amenities/{id}
         [HttpGet("/api/Amenities/{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<AmenityDTO>> GetAmenity(int id)
         {
-            Amenity amenity = await _amenity.GetAmenity(id);
-            return amenity;
-        }
-
-        // PUT: /api/Amenities/{id}
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("/api/Amenities/{id}")]
-        public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
-        {
-            if (id != amenity.Id)
-            {
-                return BadRequest();
-            }
-            var updatedAmenity = await _amenity.Update(amenity);
-            return Ok(updatedAmenity);
+            return await _amenity.GetAmenity(id);
         }
 
         // POST: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("/api/Amenities/{id}")]
-        public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
+        public async Task<ActionResult<AmenityDTO>> PostAmenity(AmenityDTO amenityDTO)
         {
-            await _amenity.Create(amenity);
-            return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
+            await _amenity.Create(amenityDTO);
+            return CreatedAtAction("GetAmenity", new { id = amenityDTO.Id }, amenityDTO);
+        }
+
+        // PUT: /api/Amenities/{id}
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("/api/Amenities/{id}")]
+        public async Task<IActionResult> PutAmenity(int id, AmenityDTO amenityDTO)
+        {
+            if (id != amenityDTO.Id)
+            {
+                return BadRequest();
+            }
+            AmenityDTO updatedAmenity = await _amenity.Update(amenityDTO);
+            return Ok(updatedAmenity);
         }
 
         // DELETE: /api/Amenities/{id}
         [HttpDelete("/api/Amenities/{id}")]
-        public async Task<ActionResult<Amenity>> DeleteAmenity(int id)
+        public async Task<ActionResult<AmenityDTO>> DeleteAmenity(int id)
         {
             await _amenity.Delete(id);
             return NoContent();

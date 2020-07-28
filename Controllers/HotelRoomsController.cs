@@ -30,7 +30,7 @@ namespace Async_Inn.Controllers
         }
 
         // GET: api/HotelRooms
-        [HttpGet("/api/Hotels/")]
+        [HttpGet("/api/Hotels/Rooms/")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms()
         {
             return await _hotelRoom.GetHotelRooms();
