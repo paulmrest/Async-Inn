@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Models.Interfaces;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Controllers
 {
@@ -16,6 +17,7 @@ namespace Async_Inn.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly IRoom _room;
+        private readonly IAmenity _amenity;
 
         /// <summary>
         /// Instantiates a new RoomsController object.
@@ -23,48 +25,48 @@ namespace Async_Inn.Controllers
         /// <param name="hotel">
         /// IRoom: a repository object that implements the IRoom interface
         /// </param>
-        public RoomsController(IRoom room)
+        public RoomsController(IRoom room, IAmenity amenity)
         {
             _room = room;
+            _amenity = amenity;
         }
 
         // GET: /api/Rooms
         [HttpGet("/api/Rooms")]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
-            return await _room.GetRooms();
+            return await _room.GetRooms(_amenity);
         }
 
         // GET: /api/Rooms/{id}
         [HttpGet("/api/Rooms/{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
-            Room room = await _room.GetRoom(id);
-            return room;
-        }
-
-        // PUT: /api/Rooms/{id}
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("/api/Rooms/{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
-        {
-            if (id != room.Id)
-            {
-                return BadRequest();
-            }
-            var updatedRoom = await _room.Update(room);
-            return Ok(updatedRoom);
+            return await _room.GetRoom(id, _amenity);
         }
 
         // POST: /api/Rooms
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("/api/Rooms")]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
+        public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO roomDTO)
         {
-            await _room.Create(room);
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            await _room.Create(roomDTO);
+            return CreatedAtAction("GetRoom", new { id = roomDTO.Id }, roomDTO);
+        }
+
+        // PUT: /api/Rooms/{id}
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPut("/api/Rooms/{id}")]
+        public async Task<IActionResult> PutRoom(int id, RoomDTO roomDTO)
+        {
+            if (id != roomDTO.Id)
+            {
+                return BadRequest();
+            }
+            var updatedRoom = await _room.Update(roomDTO);
+            return Ok(updatedRoom);
         }
 
         // POST: /api/Rooms/{roomId}/Amenity/{amenityId}

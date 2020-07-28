@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Models.Interfaces;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Controllers
 {
@@ -16,6 +17,9 @@ namespace Async_Inn.Controllers
     public class HotelsController : ControllerBase
     {
         private readonly IHotel _hotel;
+        private readonly IHotelRoom _hotelRoom;
+        private readonly IRoom _room;
+        private readonly IAmenity _amenity;
 
         /// <summary>
         /// Instantiates a new HotelsController object.
@@ -23,56 +27,59 @@ namespace Async_Inn.Controllers
         /// <param name="hotel">
         /// IHotel: a repository object that implements the IHotel interface
         /// </param>
-        public HotelsController(IHotel hotel)
+        public HotelsController(IHotel hotel, IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
             _hotel = hotel;
+            _hotelRoom = hotelRoom;
+            _room = room;
+            _amenity = amenity;
         }
 
         // GET: /api/Hotels
         [HttpGet("/api/Hotels")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels(int id)
+        public async Task<ActionResult<IEnumerable<HotelDTO>>> GetHotels(int id)
         {
-            return await _hotel.GetHotels();
+            return await _hotel.GetHotels(_hotelRoom, _room, _amenity);
         }
 
         // GET: /api/Hotels/{id}
         [HttpGet("/api/Hotels/{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
-            Hotel hotel = await _hotel.GetHotel(id);
-            return hotel;
+            HotelDTO hotelDTO = await _hotel.GetHotel(id, _hotelRoom, _room, _amenity);
+            return hotelDTO;
         }
 
         // GET: /api/Hotels/HotelByName/{hotelName}
         [HttpGet("/api/Hotels/HotelByName/{hotelName}")]
-        public async Task<ActionResult<Hotel>> GetHotelByName(string hotelName)
+        public async Task<ActionResult<HotelDTO>> GetHotelByName(string hotelName)
         {
-            Hotel hotel = await _hotel.GetHotelByName(hotelName);
-            return hotel;
+            HotelDTO hotelDTO = await _hotel.GetHotelByName(hotelName, _hotelRoom, _room, _amenity);
+            return hotelDTO;
+        }
+
+        // POST: /api/Hotels/{id}
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost("/api/Hotels")]
+        public async Task<ActionResult<HotelDTO>> PostHotel(HotelDTO hotelDTO)
+        {
+            await _hotel.Create(hotelDTO);
+            return CreatedAtAction("GetHotel", new { id = hotelDTO.Id }, hotelDTO);
         }
 
         // PUT: /api/Hotels/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("/api/Hotels/{id}")]
-        public async Task<IActionResult> PutHotel(int id, Hotel hotel)
+        public async Task<IActionResult> PutHotel(int id, HotelDTO hotelDTO)
         {
-            if (id != hotel.Id)
+            if (id != hotelDTO.Id)
             {
                 return BadRequest();
             }
-            var updatedhotel = await _hotel.Update(hotel);
-            return Ok(updatedhotel);
-        }
-
-        // POST: /api/Hotels/{id}
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("/api/Hotels/{id}")]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
-        {
-            await _hotel.Create(hotel);
-            return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
+            HotelDTO updatedHotelDTO = await _hotel.Update(hotelDTO);
+            return Ok(updatedHotelDTO);
         }
 
         // DELETE: /api/Hotels/{id}

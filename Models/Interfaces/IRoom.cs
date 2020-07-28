@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Models.Interfaces
 {
     public interface IRoom
     {
-        Task<List<Room>> GetRooms();
+        Task<List<RoomDTO>> GetRooms(IAmenity amenity);
 
-        Task<Room> GetRoom(int id);
+        Task<RoomDTO> GetRoom(int id, IAmenity amenity);
 
-        Task<Room> Create(Room room);
+        Task<RoomDTO> Create(RoomDTO roomDTO);
 
-        Task<Room> Update(Room room);
+        Task<RoomDTO> Update(RoomDTO roomDTO);
 
         Task Delete(int id);
 

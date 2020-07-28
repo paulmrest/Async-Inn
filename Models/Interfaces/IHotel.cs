@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Models.Interfaces
 {
     public interface IHotel
     {
-        Task<List<Hotel>> GetHotels();
+        Task<List<HotelDTO>> GetHotels(IHotelRoom hotelRoom, IRoom room, IAmenity amenity);
 
-        Task<Hotel> GetHotel(int id);
+        Task<HotelDTO> GetHotel(int id, IHotelRoom hotelRoom, IRoom room, IAmenity amenity);
 
-        Task<Hotel> GetHotelByName(string hotelName);
+        Task<HotelDTO> GetHotelByName(string hotelName, IHotelRoom hotelRoom, IRoom room, IAmenity amenity);
 
-        Task<Hotel> Create(Hotel hotel);
+        Task<HotelDTO> Create(HotelDTO hotelDTO);
 
-        Task<Hotel> Update(Hotel hotel);
+        Task<HotelDTO> Update(HotelDTO hotelDTO);
 
         Task Delete(int id);
     }
