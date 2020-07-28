@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Async_Inn.Models.DTOs;
 
 namespace Async_Inn.Models.Services
 {
@@ -27,31 +28,33 @@ namespace Async_Inn.Models.Services
         /// <summary>
         /// Gets all hotel rooms.
         /// </summary>
+        /// <param name="room">
+        /// IRoom: an object that implements the IRoom interface
+        /// </param>
+        /// <param name="amenity">
+        /// IAmenity: an object that implements the IAmenity Interface
+        /// </param>
         /// <returns>
-        /// Task<List<HotelRoom>>: a List of HotelRooms embedded in a Task object
+        /// Task<List<HotelRoomDTO>>: a List of HotelRoomDTOs embedded in a Task object
         /// </returns>
-        public async Task<List<HotelRoom>> GetHotelRooms()
+        public async Task<List<HotelRoomDTO>> GetHotelRooms(IRoom room, IAmenity amenity)
         {
-            var hotelRooms = await _context.HotelRooms.ToListAsync();
-            return hotelRooms;
-        }
+            List<HotelRoomDTO> hotelRoomDTOs = await _context.HotelRooms
+                .Select(x => new HotelRoomDTO() 
+                { 
+                    HotelId = x.HotelId, 
+                    RoomNumber = x.RoomNumber, 
+                    RoomId = x.RoomId, 
+                    Rate = x.Rate, 
+                    PetFriendly = x.PetFriendly 
+                })
+                .ToListAsync();
 
-        /// <summary>
-        /// Gets a specific hotel room by hotelId and roomNumber WITHOUT any connected objects.
-        /// </summary>
-        /// <param name="hotelId">
-        /// int: a hotelId
-        /// </param>
-        /// <param name="roomNumber">
-        /// int: a roomNumber
-        /// </param>
-        /// <returns>
-        /// Task<HotelRoom>: a single HotelRoom object embedded in a Task object
-        /// </returns>
-        public async Task<HotelRoom> GetHotelRoomWithoutDetails(int hotelId, int roomNumber)
-        {
-            HotelRoom hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);
-            return hotelRoom;
+            foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
+            {
+                oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+            }
+            return hotelRoomDTOs;
         }
 
         /// <summary>
@@ -60,70 +63,141 @@ namespace Async_Inn.Models.Services
         /// <param name="hotelId">
         /// int: a hotelId
         /// </param>
+        /// <param name="room">
+        /// IRoom: an object that implements the IRoom interface
+        /// </param>
+        /// <param name="amenity">
+        /// IAmenity: an object that implements the IAmenity Interface
+        /// </param>
         /// <returns>
-        /// Task<List<HotelRoom>>: a List of HotelRooms embedded in a Task object
+        /// Task<List<HotelRoomDTO>>: a List of HotelRoomDTOs embedded in a Task object
         /// </returns>
-        public async Task<List<HotelRoom>> GetHotelRoomsForHotel(int hotelId)
+        public async Task<List<HotelRoomDTO>> GetHotelRoomsForHotel(int hotelId, IRoom room, IAmenity amenity)
         {
-            var hotelRoomsForHotel = await _context.HotelRooms.Where(x => x.HotelId == hotelId)
-                                                              .Include(x => x.Hotel)
-                                                              .Include(x => x.Room)
-                                                              .ThenInclude(x => x.RoomAmenities)
-                                                              .ThenInclude(x => x.Amenity)
-                                                              .ToListAsync();
-            return hotelRoomsForHotel;
+            List<HotelRoomDTO> hotelRoomDTOsForHotel = await _context.HotelRooms
+                .Where(x => x.HotelId == hotelId)
+                .Select(x => new HotelRoomDTO()
+                {
+                    HotelId = x.HotelId,
+                    RoomNumber = x.RoomNumber,
+                    RoomId = x.RoomId,
+                    Rate = x.Rate,
+                    PetFriendly = x.PetFriendly
+                })
+                .ToListAsync();
+            foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOsForHotel)
+            {
+                oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+            }
+            return hotelRoomDTOsForHotel;
         }
 
         /// <summary>
-        /// Gets a specific HotelRoom by hotelId and roomNumber WITH all connected objects.
+        /// Gets a specific hotel room by hotelId and roomNumber with connected rooms and amenities.
+        /// </summary>
+        /// <param name="hotelId">
+        /// int: a hotelId
+        /// </param>
+        /// <param name="roomNumber">
+        /// int: a roomNumber
+        /// </param>
+        /// <param name="room">
+        /// IRoom: an object that implements the IRoom interface
+        /// </param>
+        /// <param name="amenity">
+        /// IAmenity: an object that implements the IAmenity Interface
+        /// </param>
+        /// <returns>
+        /// Task<HotelRoom>: a single HotelRoomDTO embedded in a Task object
+        /// </returns>
+        public async Task<HotelRoomDTO> GetRoomDetails(int hotelId, int roomNumber, IRoom room, IAmenity amenity)
+        {
+            HotelRoomDTO hotelRoomDTO = await _context.HotelRooms
+                .Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+                .Select(x => new HotelRoomDTO()
+                {
+                    HotelId = x.HotelId,
+                    RoomNumber = x.RoomNumber,
+                    RoomId = x.RoomId,
+                    Rate = x.Rate,
+                    PetFriendly = x.PetFriendly
+                })
+                .FirstOrDefaultAsync();
+            hotelRoomDTO.Room = await room.GetRoom(hotelId, amenity);
+            return hotelRoomDTO;
+        }
+
+
+        /// <summary>
+        /// Gets a specific HotelRoom by hotelId and roomNumber with no details.
         /// </summary>
         /// <param name="hotelId"></param>
         /// <param name="roomNumber"></param>
         /// <returns>
         /// Task<HotelRoom>: a HotelRoom object embedded in a Task object
         /// </returns>
-        public async Task<HotelRoom> GetRoomDetails(int hotelId, int roomNumber)
+        public async Task<HotelRoomDTO> GetHotelRoomWithoutDetails(int hotelId, int roomNumber)
         {
-            var hotelRoom = await _context.HotelRooms.Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
-                                                     .Include(x => x.Hotel)
-                                                     .Include(x => x.Room)
-                                                     .ThenInclude(x => x.RoomAmenities)
-                                                     .ThenInclude(x => x.Amenity)
-                                                     .FirstOrDefaultAsync();
-            return hotelRoom;
+            HotelRoomDTO hotelRoomDTO = await _context.HotelRooms
+                .Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+                .Select(x => new HotelRoomDTO()
+                {
+                    HotelId = x.HotelId,
+                    RoomNumber = x.RoomNumber,
+                    RoomId = x.RoomId,
+                    Rate = x.Rate,
+                    PetFriendly = x.PetFriendly
+                })
+                .FirstOrDefaultAsync();
+            return hotelRoomDTO;
         }
 
         /// <summary>
         /// Adds a HotelRoom to the database.
         /// </summary>
         /// <param name="hotelRoom">
-        /// HotelRoom: a HotelRoom object
+        /// HotelRoomDTO: a HotelRoomDTO object
         /// </param>
         /// <returns>
-        /// Task<HotelRoom>: the parameter HotelRoom object after saving it to the database
+        /// Task<HotelRoomDTO>: the parameter HotelRoomDTO object after saving it to the database
         /// </returns>
-        public async Task<HotelRoom> Create(HotelRoom hotelRoom, int hotelId)
+        public async Task<HotelRoomDTO> Create(HotelRoomDTO hotelRoomDTO, int hotelId)
         {
-            hotelRoom.HotelId = hotelId;
-            _context.Entry(hotelRoom).State = EntityState.Added;
+            HotelRoom hotelRoomEntity = new HotelRoom()
+            {
+                HotelId = hotelRoomDTO.HotelId,
+                RoomNumber = hotelRoomDTO.RoomNumber,
+                RoomId = hotelRoomDTO.RoomId,
+                Rate = hotelRoomDTO.Rate,
+                PetFriendly = hotelRoomDTO.PetFriendly
+            };
+            _context.Entry(hotelRoomEntity).State = EntityState.Added;
             await _context.SaveChangesAsync();
-            return hotelRoom;
+            return hotelRoomDTO;
         }
 
         /// <summary>
         /// Updates a HotelRoom in the database.
         /// </summary>
         /// <param name="hotelRoom">
-        /// HotelRoom: the HotelRoom to be updated
+        /// HotelRoomDTO: the HotelRoomDTO to be updated
         /// </param>
         /// <returns>
-        /// Task<HotelRoom>: the parameter HotelRoom object after updating it in the database
+        /// Task<HotelRoomDTO>: the parameter HotelRoomDTO object after updating it in the database
         /// </returns>
-        public async Task<HotelRoom> Update(HotelRoom hotelRoom)
+        public async Task<HotelRoomDTO> Update(HotelRoomDTO hotelRoomDTO)
         {
-            _context.Entry(hotelRoom).State = EntityState.Modified;
+            HotelRoom hotelRoomEntity = new HotelRoom()
+            {
+                HotelId = hotelRoomDTO.HotelId,
+                RoomNumber = hotelRoomDTO.RoomNumber,
+                RoomId = hotelRoomDTO.RoomId,
+                Rate = hotelRoomDTO.Rate,
+                PetFriendly = hotelRoomDTO.PetFriendly
+            };
+            _context.Entry(hotelRoomEntity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return hotelRoom;
+            return hotelRoomDTO;
         }
 
         /// <summary>
@@ -140,7 +214,7 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task Delete(int hotelId, int roomNumber)
         {
-            HotelRoom hotelRoom = await GetHotelRoomWithoutDetails(hotelId, roomNumber);
+            HotelRoom hotelRoom = await _context.HotelRooms.FindAsync(hotelId, roomNumber);
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

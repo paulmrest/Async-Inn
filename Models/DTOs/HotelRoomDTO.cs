@@ -15,7 +15,7 @@ namespace Async_Inn.Models.DTOs
 
         public bool PetFriendly { get; set; }
 
-        public int RoomID { get; set; }
+        public int RoomId { get; set; }
 
         public RoomDTO Room { get; set; }
     }
