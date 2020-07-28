@@ -9,7 +9,9 @@ A full CRUD ASP.NET Core Web App that provides an API for a chain of hotels to k
 
 Employs dependency injection and interfaces to allow for loose coupling between the controllers and the entities being created/read/updated/deleted.
 
-Implements navigation properties and routing with the join table RoomAmenities linking Rooms and Amenities, and the join table (with payload) HotelRooms linking Hotels and Rooms.
+Implements navigation properties and routing with the join table RoomAmenities linking Rooms and Amenities, and the join table (with payload) HotelRooms linking Hotels and Rooms. 
+
+Employs DTO objects to mask the database structure.
 
 ---
 
@@ -56,6 +58,10 @@ Authors:
 ---
 
 ### Change Log
+
+#### 2020-27-07
+
+- Added full DTO implementation.
 
 #### 2020-26-07
 
