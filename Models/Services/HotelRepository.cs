@@ -25,21 +25,6 @@ namespace Async_Inn.Models.Services
             _context = context;
         }
 
-        /// <summary>
-        /// Gets all Hotels.
-        /// </summary>
-        /// <param name="hotelRoom">
-        /// IHotelRoom: an object that implements the IHotelRoom interface
-        /// </param>
-        /// <param name="room">
-        /// IRoom: an object that implements the IRoom interface
-        /// </param>
-        /// <param name="amenity">
-        /// IAmenity: an object that implements the IAmenity Interface
-        /// </param>
-        /// <returns>
-        /// Task<List<HotelDTO>>: a list of HotelDTO objects embedded in a Task object
-        /// </returns>
         public async Task<List<HotelDTO>> GetHotels(IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
             List<HotelDTO> hotelDTOs = await _context.Hotels
@@ -60,24 +45,6 @@ namespace Async_Inn.Models.Services
             return hotelDTOs;
         }
 
-        /// <summary>
-        /// Gets a Hotel by id.
-        /// </summary>
-        /// <param name="id">
-        /// int: a Hotel id
-        /// </param>
-        /// <param name="hotelRoom">
-        /// IHotelRoom: an object that implements the IHotelRoom interface
-        /// </param>
-        /// <param name="room">
-        /// IRoom: an object that implements the IRoom interface
-        /// </param>
-        /// <param name="amenity">
-        /// IAmenity: an object that implements the IAmenity Interface
-        /// </param>
-        /// <returns>
-        /// Task<HotelDTO>: a HotelDTO object embedded in a Task object
-        /// </returns>
         public async Task<HotelDTO> GetHotel(int id, IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
             HotelDTO hotelDTO = await _context.Hotels
@@ -96,24 +63,6 @@ namespace Async_Inn.Models.Services
             return hotelDTO;
         }
 
-        /// <summary>
-        /// Gets a Hotel by name.
-        /// </summary>
-        /// <param name="hotelName">
-        /// string: a hotel name
-        /// </param>
-        /// <param name="hotelRoom">
-        /// IHotelRoom: an object that implements the IHotelRoom interface
-        /// </param>
-        /// <param name="room">
-        /// IRoom: an object that implements the IRoom interface
-        /// </param>
-        /// <param name="amenity">
-        /// IAmenity: an object that implements the IAmenity Interface
-        /// </param>
-        /// <returns>
-        /// Task<HotelDTO>: a HotelDTO object embedded in a Task object
-        /// </returns>
         public async Task<HotelDTO> GetHotelByName(string hotelName, IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
             int hotelId = await _context.Hotels
@@ -123,15 +72,6 @@ namespace Async_Inn.Models.Services
             return await GetHotel(hotelId, hotelRoom, room, amenity);
         }
 
-        /// <summary>
-        /// Saves a Hotel object to the database.
-        /// </summary>
-        /// <param name="hotel">
-        /// HotelDTO: a HotelDTO object
-        /// </param>
-        /// <returns>
-        /// Task<HotelDTO>: the parameter HotelDTO object after being saved to the database
-        /// </returns>
         public async Task<HotelDTO> Create(HotelDTO hotelDTO)
         {
             Hotel hotelEntity = new Hotel()
@@ -148,15 +88,6 @@ namespace Async_Inn.Models.Services
             return hotelDTO;
         }
 
-        /// <summary>
-        /// Updates a Hotel object in the database.
-        /// </summary>
-        /// <param name="hotel">
-        /// HotelDTO: a HotelDTO object with updated information
-        /// </param>
-        /// <returns>
-        /// Task<HotelDTO>: the parameter HotelDTO object after being updated
-        /// </returns>
         public async Task<HotelDTO> Update(HotelDTO hotelDTO)
         {
             Hotel hotelEntity = new Hotel()
@@ -173,15 +104,6 @@ namespace Async_Inn.Models.Services
             return hotelDTO;
         }
 
-        /// <summary>
-        /// Deletes a Hotel object from the database.
-        /// </summary>
-        /// <param name="id">
-        /// int: the id of the Hotel to be deleted
-        /// </param>
-        /// <returns>
-        /// Task: an empty Task object
-        /// </returns>
         public async Task Delete(int id)
         {
             Hotel hotel = await _context.Hotels.FindAsync(id);

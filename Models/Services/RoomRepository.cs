@@ -25,15 +25,6 @@ namespace Async_Inn.Models.Services
             _context = context;
         }
 
-        /// <summary>
-        /// Gets all rooms.
-        /// </summary>
-        /// <param name="amenity">
-        /// IAmenity: an object that implements IAmenity
-        /// </param>
-        /// <returns>
-        /// Task<List<RoomDTO>>: a List of RoomDTOs embedded in a Task object
-        /// </returns>
         public async Task<List<RoomDTO>> GetRooms(IAmenity amenity)
         {
             List<Room> rooms = await _context.Rooms
@@ -54,18 +45,6 @@ namespace Async_Inn.Models.Services
             return roomDTOs;
         }
 
-        /// <summary>
-        /// Gets a specific room by id.
-        /// </summary>
-        /// <param name="id">
-        /// int: a Room id
-        /// </param>
-        /// <param name="amenity">
-        /// IAmenity: an object that implements IAmenity
-        /// </param>
-        /// <returns>
-        /// Task<RoomDTO>: a RoomDTO object embedded in a Task object
-        /// </returns>
         public async Task<RoomDTO> GetRoom(int id, IAmenity amenity)
         {
 
@@ -87,15 +66,6 @@ namespace Async_Inn.Models.Services
             return roomDTO;
         }
 
-        /// <summary>
-        /// Adds a Room object to the database.
-        /// </summary>
-        /// <param name="room">
-        /// RoomDTO: a RoomDTO object
-        /// </param>
-        /// <returns>
-        /// Task<RoomDTO>: the parameter RoomDTO object after being added to the database, embedded in a Task object
-        /// </returns>
         public async Task<RoomDTO> Create(RoomDTO roomDTO)
         {
             Room roomEntity = new Room()
@@ -109,15 +79,6 @@ namespace Async_Inn.Models.Services
             return roomDTO;
         }
 
-        /// <summary>
-        /// Updates a room in the database.
-        /// </summary>
-        /// <param name="room">
-        /// RoomDTO: the RoomDTO object with updated information
-        /// </param>
-        /// <returns>
-        /// Task<RoomDTO>: the updated RoomDTO object embedded in a Task object
-        /// </returns>
         public async Task<RoomDTO> Update(RoomDTO roomDTO)
         {
             Room roomEntity = new Room()
@@ -131,15 +92,6 @@ namespace Async_Inn.Models.Services
             return roomDTO;
         }
 
-        /// <summary>
-        /// Deletes a room from the database.
-        /// </summary>
-        /// <param name="id">
-        /// int: the id of the Room to be deleted
-        /// </param>
-        /// <returns>
-        /// Task: an empty Task object
-        /// </returns>
         public async Task Delete(int id)
         {
             Room roomEntity = await _context.Rooms
@@ -148,18 +100,6 @@ namespace Async_Inn.Models.Services
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Adds an Amenity to a Room
-        /// </summary>
-        /// <param name="amenityId">
-        /// int: an Amenity id
-        /// </param>
-        /// <param name="roomId">
-        /// int: a Room id
-        /// </param>
-        /// <returns>
-        /// Task: an empty Task object
-        /// </returns>
         public async Task AddAmenityToRoom(int amenityId, int roomId)
         {
             RoomAmenities roomAmenities = new RoomAmenities()
@@ -171,18 +111,6 @@ namespace Async_Inn.Models.Services
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Removes an Amenity from a Room.
-        /// </summary>
-        /// <param name="amenityId">
-        /// int: an Amenity id
-        /// </param>
-        /// <param name="roomId">
-        /// int: a Room id
-        /// </param>
-        /// <returns>
-        /// Task: an Empty Task object
-        /// </returns>
         public async Task RemoveAmenityFromRoom(int amenityId, int roomId)
         {
             var result = await _context.RoomAmenities
