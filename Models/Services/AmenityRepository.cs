@@ -32,8 +32,9 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task<List<AmenityDTO>> GetAmenities()
         {
-            List<AmenityDTO> amenities = await _context.Amenities.Select(x => new AmenityDTO { Id = x.Id, Name = x.Name })
-                                                                 .ToListAsync();
+            List<AmenityDTO> amenities = await _context.Amenities
+                .Select(x => new AmenityDTO { Id = x.Id, Name = x.Name })
+                .ToListAsync();
             return amenities;
         }
 
@@ -48,9 +49,10 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task<AmenityDTO> GetAmenity(int id)
         {
-            AmenityDTO amenity = await _context.Amenities.Where(x => x.Id == id)
-                                                         .Select(x => new AmenityDTO { Id = x.Id, Name = x.Name })
-                                                         .FirstOrDefaultAsync();
+            AmenityDTO amenity = await _context.Amenities
+                .Where(x => x.Id == id)              
+                .Select(x => new AmenityDTO { Id = x.Id, Name = x.Name })                                         
+                .FirstOrDefaultAsync();
             return amenity;
         }
 
@@ -107,7 +109,8 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task Delete(int id)
         {
-            Amenity amenityEntity = await _context.Amenities.FindAsync(id);  
+            Amenity amenityEntity = await _context.Amenities
+                .FindAsync(id);  
             _context.Entry(amenityEntity).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }

@@ -43,17 +43,15 @@ namespace Async_Inn.Models.Services
         public async Task<List<HotelDTO>> GetHotels(IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
             List<HotelDTO> hotelDTOs = await _context.Hotels
-                .Select(x =>
-                    new HotelDTO
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        StreetAddress = x.StreetAddress,
-                        City = x.City,
-                        State = x.State,
-                        Phone = x.Phone
-                    }
-                )
+                .Select(x => new HotelDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    StreetAddress = x.StreetAddress,
+                    City = x.City,
+                    State = x.State,
+                    Phone = x.Phone
+                })
                 .ToListAsync();
             foreach (HotelDTO oneHotelDTO in hotelDTOs)
             {
@@ -84,17 +82,15 @@ namespace Async_Inn.Models.Services
         {
             HotelDTO hotelDTO = await _context.Hotels
                 .Where(x => x.Id == id)
-                .Select(x =>
-                    new HotelDTO
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        StreetAddress = x.StreetAddress,
-                        City = x.City,
-                        State = x.State,
-                        Phone = x.Phone
-                    }
-                )
+                .Select(x => new HotelDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    StreetAddress = x.StreetAddress,
+                    City = x.City,
+                    State = x.State,
+                    Phone = x.Phone
+                })
                 .FirstAsync();
             hotelDTO.Rooms = await hotelRoom.GetHotelRoomsForHotel(id, room, amenity);
             return hotelDTO;
@@ -120,9 +116,10 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task<HotelDTO> GetHotelByName(string hotelName, IHotelRoom hotelRoom, IRoom room, IAmenity amenity)
         {
-            int hotelId = await _context.Hotels.Where(x => x.Name == hotelName)
-                                               .Select(x => x.Id)
-                                               .FirstAsync();
+            int hotelId = await _context.Hotels
+                .Where(x => x.Name == hotelName)                         
+                .Select(x => x.Id)                             
+                .FirstAsync();
             return await GetHotel(hotelId, hotelRoom, room, amenity);
         }
 

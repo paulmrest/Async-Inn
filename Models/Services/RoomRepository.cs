@@ -36,7 +36,9 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task<List<RoomDTO>> GetRooms(IAmenity amenity)
         {
-            List<Room> rooms = await _context.Rooms.Include(x => x.RoomAmenities).ToListAsync();
+            List<Room> rooms = await _context.Rooms
+                .Include(x => x.RoomAmenities)
+                .ToListAsync();
             List<RoomDTO> roomDTOs = new List<RoomDTO>();
             foreach (Room oneRoom in rooms)
             {
@@ -67,20 +69,20 @@ namespace Async_Inn.Models.Services
         public async Task<RoomDTO> GetRoom(int id, IAmenity amenity)
         {
 
-            Room room = await _context.Rooms.Where(x => x.Id == id)
-                                            .Include(x => x.RoomAmenities)
-                                            .FirstOrDefaultAsync();
+            Room room = await _context.Rooms
+                .Where(x => x.Id == id)                           
+                .Include(x => x.RoomAmenities)     
+                .FirstOrDefaultAsync();
 
-            RoomDTO roomDTO = await _context.Rooms.Where(x => x.Id == id)
-                                                  .Select(x => new RoomDTO() { Id = x.Id, Name = x.Name, Layout = x.Layout })
-                                                  .FirstOrDefaultAsync();
-
+            RoomDTO roomDTO = await _context.Rooms
+                .Where(x => x.Id == id)
+                .Select(x => new RoomDTO() { Id = x.Id, Name = x.Name, Layout = x.Layout })                                  
+                .FirstOrDefaultAsync();
             List<AmenityDTO> amenityDTOs = new List<AmenityDTO>();
             foreach (RoomAmenities oneAmenity in room.RoomAmenities)
             {
                 amenityDTOs.Add(await amenity.GetAmenity(oneAmenity.AmenityId));
             }
-
             roomDTO.Amenities = amenityDTOs;
             return roomDTO;
         }
@@ -140,7 +142,8 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task Delete(int id)
         {
-            Room roomEntity = await _context.Rooms.FindAsync(id);
+            Room roomEntity = await _context.Rooms
+                .FindAsync(id);
             _context.Entry(roomEntity).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
@@ -182,7 +185,8 @@ namespace Async_Inn.Models.Services
         /// </returns>
         public async Task RemoveAmenityFromRoom(int amenityId, int roomId)
         {
-            var result = await _context.RoomAmenities.FirstOrDefaultAsync(x => x.AmenityId == amenityId && x.RoomId == roomId);
+            var result = await _context.RoomAmenities
+                .FirstOrDefaultAsync(x => x.AmenityId == amenityId && x.RoomId == roomId);
             _context.Entry(result).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
