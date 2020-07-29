@@ -24,12 +24,6 @@ namespace Async_Inn.Models.Services
             _context = context;
         }
 
-        /// <summary>
-        /// Gets all amenities.
-        /// </summary>
-        /// <returns>
-        /// Task<List<AmenityDTO>>: a List of AmenityDTO objects embedded in a Task object
-        /// </returns>
         public async Task<List<AmenityDTO>> GetAmenities()
         {
             List<AmenityDTO> amenities = await _context.Amenities
@@ -38,15 +32,6 @@ namespace Async_Inn.Models.Services
             return amenities;
         }
 
-        /// <summary>
-        /// Gets a specific amenity by its id.
-        /// </summary>
-        /// <param name="id">
-        /// int: an AmenityDTO id
-        /// </param>
-        /// <returns>
-        /// Task<Amenity>: an AmenityDTO object embedded in a Task object
-        /// </returns>
         public async Task<AmenityDTO> GetAmenity(int id)
         {
             AmenityDTO amenity = await _context.Amenities
@@ -56,15 +41,6 @@ namespace Async_Inn.Models.Services
             return amenity;
         }
 
-        /// <summary>
-        /// Saves an amenity to the database.
-        /// </summary>
-        /// <param name="amenity">
-        /// AmenityDTO: the AmenityDTO object to be saved to the database
-        /// </param>
-        /// <returns>
-        /// Task<AmenityDTO>: the parameter AmenityDTO object updated after saving to the database, embedded in a Task object
-        /// </returns>
         public async Task<AmenityDTO> Create(AmenityDTO amenityDTO)
         {
             Amenity amenityEntity = new Amenity()
@@ -77,15 +53,6 @@ namespace Async_Inn.Models.Services
             return amenityDTO;
         }
 
-        /// <summary>
-        /// Updates an amenity in the database.
-        /// </summary>
-        /// <param name="amenity">
-        /// AmenityDTO: an AmenityDTO object with the updated information
-        /// </param>
-        /// <returns>
-        /// Task<AmenityDTO>: the updated AmenityDTO object embedded in a Task object
-        /// </returns>
         public async Task<AmenityDTO> Update(AmenityDTO amenityDTO)
         {
             Amenity amenityEntity = new Amenity()
@@ -98,15 +65,6 @@ namespace Async_Inn.Models.Services
             return amenityDTO;
         }
 
-        /// <summary>
-        /// Deletes an amenity from the database.
-        /// </summary>
-        /// <param name="id">
-        /// int: the id of the AmenityDTO object to be deleted
-        /// </param>
-        /// <returns>
-        /// Task: an empty Task object
-        /// </returns>
         public async Task Delete(int id)
         {
             Amenity amenityEntity = await _context.Amenities
