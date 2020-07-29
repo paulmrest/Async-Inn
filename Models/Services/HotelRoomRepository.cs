@@ -49,7 +49,6 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly 
                 })
                 .ToListAsync();
-
             foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
             {
                 oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);

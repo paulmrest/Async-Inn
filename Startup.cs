@@ -14,6 +14,8 @@ using Async_Inn.Models.Services;
 using Async_Inn.Models.Interfaces;
 using Async_Inn.Controllers;
 using Microsoft.Extensions.Options;
+using Async_Inn.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Async_Inn
 {
@@ -39,6 +41,11 @@ namespace Async_Inn
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AsyncInnDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddTransient<IHotel, HotelRepository>();
             services.AddTransient<IRoom, RoomRepository>();
             services.AddTransient<IAmenity, AmenityRepository>();

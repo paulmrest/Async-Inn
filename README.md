@@ -13,6 +13,10 @@ Implements navigation properties and routing with the join table RoomAmenities l
 
 Employs DTO objects to mask the database structure.
 
+Uses ASP.Net Core Identity API to create users and passwords, and then login using those credentials.
+
+Identity: a way to be able to demonstrate who you are to a system. This is frequently done through a username/password combination, a token, two-step verification, and even biometrics.
+
 ---
 
 ### Getting Started
@@ -58,6 +62,10 @@ Authors:
 ---
 
 ### Change Log
+
+#### 2020-27-07
+
+- Supports authentication using ASP.Net Core's Identity API.
 
 #### 2020-27-07
 
