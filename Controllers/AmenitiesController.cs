@@ -9,10 +9,12 @@ using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Models.Interfaces;
 using Async_Inn.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class AmenitiesController : ControllerBase
     {
@@ -40,7 +42,7 @@ namespace Async_Inn.Controllers
         // POST: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("/api/Amenities/{id}")]
+        [HttpPost("/api/Amenities")]
         public async Task<ActionResult<AmenityDTO>> PostAmenity(AmenityDTO amenityDTO)
         {
             await _amenity.Create(amenityDTO);
