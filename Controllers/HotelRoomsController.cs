@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = ApplicationRoles.DistrictManager)]
     [ApiController]
     public class HotelRoomsController : ControllerBase
     {
@@ -37,6 +37,7 @@ namespace Async_Inn.Controllers
         }
 
         // GET: api/HotelRooms
+        [AllowAnonymous]
         [HttpGet("/api/Hotels/Rooms/")]
         public async Task<ActionResult<IEnumerable<HotelRoomDTO>>> GetHotelRooms()
         {
@@ -44,6 +45,7 @@ namespace Async_Inn.Controllers
         }
 
         //GET: /api/Hotel/{hotelId}/Rooms
+        [AllowAnonymous]
         [HttpGet("/api/Hotels/{hotelId}/Rooms")]
         public async Task<ActionResult<IEnumerable<HotelRoomDTO>>> GetRoomsForHotel(int hotelId)
         {
@@ -51,6 +53,7 @@ namespace Async_Inn.Controllers
         }
 
         //GET: /api/Hotels/{hotelId}/Rooms/{hotelNumber}
+        [AllowAnonymous]
         [HttpGet("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoomDTO>> GetRoomDetails(int hotelId, int roomNumber)
         {
@@ -58,6 +61,7 @@ namespace Async_Inn.Controllers
         }
 
         //GET: /api/Hotels/{hotelId}/Rooms/{hotelNumber}
+        [AllowAnonymous]
         [HttpGet("/api/Hotels/{hotelId}/Rooms/NoDetails/{roomNumber}")]
         public async Task<ActionResult<HotelRoomDTO>> GetRoomWithoutDetails(int hotelId, int roomNumber)
         {
@@ -67,6 +71,7 @@ namespace Async_Inn.Controllers
         // POST: /api/Hotels/{hotelId}/Rooms/
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = ApplicationRoles.PropertyManager)]
         [HttpPost("/api/Hotels/{hotelId}/Rooms/")]
         public async Task<ActionResult<HotelRoomDTO>> PostHotelRoom(HotelRoomDTO hotelRoomDTO, int hotelId)
         {
@@ -77,6 +82,7 @@ namespace Async_Inn.Controllers
         // PUT: /api/Hotels/{hotelId}/Rooms/{roomNumber}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Policy = "PropertyManagerAndAgent")]
         [HttpPut("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<IActionResult> PutHotelRoom(HotelRoomDTO hotelRoomDTO, int hotelId, int roomNumber)
         {
@@ -89,6 +95,7 @@ namespace Async_Inn.Controllers
         }
 
         // DELETE: /api/Hotels/{hotelId}/Rooms/{roomNumber}
+        [Authorize(Roles = ApplicationRoles.PropertyManager)]
         [HttpDelete("/api/Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoomDTO>> DeleteHotelRoom(int hotelId, int roomNumber)
         {

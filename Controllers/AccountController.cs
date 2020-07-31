@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using SQLitePCL;
 
 namespace Async_Inn.Controllers
@@ -39,10 +40,6 @@ namespace Async_Inn.Controllers
         //api/account/register
         [Authorize(Policy = "DistrictAndPropertyManagers")]
         [HttpPost, Route("register")]
-        //[Authorize(Roles= "District Manager")]
-        //[Authorize(Roles = ApplicationRoles.DistrictManager)]
-        //[Authorize(Roles = "District Manager, Property Manager")]
-        //[Authorize(Policy= "DistrictAndPropertyManagers")]
         //[AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
@@ -56,14 +53,9 @@ namespace Async_Inn.Controllers
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
             if (result.Succeeded)
             {
-                if (registerDTO.Role != null)
-                {
-                    await _userManager.AddToRoleAsync(user, GetRole(registerDTO));
-                }
-                await _signInManager.SignInAsync(user, false);
-                return Ok();
+                return await SetUpUserRole(registerDTO, user);
             }
-            return BadRequest("Invalid Registration");
+            return BadRequest($"Invalid Registration, {result.ToString()}");
         }
 
         [Authorize(Roles = ApplicationRoles.DistrictManager)]
@@ -79,7 +71,9 @@ namespace Async_Inn.Controllers
         [HttpPost, Route("assign/agent/role")]
         public async Task<IActionResult> AssignRoleToAgentUser(AssignRoleDTO assignDTO)
         {
-            if (assignDTO.Role == "Agent")
+            //get the role of the currently logged in user
+            var userRole = User.Claims.Where(x => x.Type == ClaimTypes.Role);
+            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || assignDTO.Role.ToLower() == "agent")
             {
                 var user = await _userManager.FindByEmailAsync(assignDTO.Email);
                 await _userManager.AddToRoleAsync(user, ApplicationRoles.Agent);
@@ -113,6 +107,40 @@ namespace Async_Inn.Controllers
             return BadRequest("Invalid attempt");
         }
 
+        /// <summary>
+        /// Private helper method. Sets up new user role from RegisterRTO for the ApplicationUser object.
+        /// </summary>
+        /// <param name="registerDTO">
+        /// RegisterRTO: object containing data for the new user being registered
+        /// </param>
+        /// <returns>
+        /// Task<IActionResult>: a message whether registering the new user succeeded
+        /// </returns>
+        private async Task<IActionResult> SetUpUserRole(RegisterDTO registerDTO, ApplicationUser user)
+        {
+            //get the role of the currently logged in user
+            var userRole = User.Claims.Where(x => x.Type == ClaimTypes.Role);
+            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || registerDTO.Role.ToLower() == ApplicationRoles.Agent.ToLower())
+            {
+                await _userManager.AddToRoleAsync(user, GetRole(registerDTO));
+            }
+            else
+            {
+                return BadRequest("You are not authorized to create a new user with that role.");
+            }
+            await _signInManager.SignInAsync(user, false);
+            return Ok($"{registerDTO.Email} created and assigned a role of {registerDTO.Role}");
+        }
+
+        /// <summary>
+        /// Private helper method. Matches user input to ApplicationRoles.
+        /// </summary>
+        /// <param name="registerDTO">
+        /// RegisterRTO: object containing data for the new user being registered, including the role
+        /// </param>
+        /// <returns>
+        /// string: the string representation of the role from ApplicationRoles
+        /// </returns>
         private string GetRole(RegisterDTO registerDTO)
         {
             string role = "";
@@ -133,6 +161,18 @@ namespace Async_Inn.Controllers
             return role;
         }
 
+        /// <summary>
+        /// Private helper method. Creates a new JwtSecurityToken from ApplicationUser object.
+        /// </summary>
+        /// <param name="user">
+        /// 
+        /// </param>
+        /// <param name="roles">
+        /// 
+        /// </param>
+        /// <returns>
+        /// JwtSecurityToken: 
+        /// </returns>
         private JwtSecurityToken CreateToken(ApplicationUser user, List<string> roles)
         {
             var authClaims = new List<Claim>()
@@ -143,12 +183,10 @@ namespace Async_Inn.Controllers
                 new Claim("LastName", user.LastName),
                 new Claim("UserId", user.Id)
             };
-
             foreach (var role in roles)
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, role));
             }
-
             var token = AuthenticateToken(authClaims);
             return token;
         }

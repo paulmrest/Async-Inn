@@ -10,22 +10,26 @@ using Async_Inn.Models;
 using Async_Inn.Models.Interfaces;
 using Async_Inn.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = ApplicationRoles.DistrictManager)]
     [ApiController]
     public class AmenitiesController : ControllerBase
     {
         private readonly IAmenity _amenity;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AmenitiesController(IAmenity amenity)
+        public AmenitiesController(UserManager<ApplicationUser> userManager, IAmenity amenity)
         {
             _amenity = amenity;
+            _userManager = userManager;
         }
 
         // GET: api/Amenities
+        [AllowAnonymous]
         [HttpGet("/api/Amenities")]
         public async Task<ActionResult<IEnumerable<AmenityDTO>>> GetAmenities()
         {
@@ -33,6 +37,7 @@ namespace Async_Inn.Controllers
         }
 
         // GET: /api/Amenities/{id}
+        [AllowAnonymous]
         [HttpGet("/api/Amenities/{id}")]
         public async Task<ActionResult<AmenityDTO>> GetAmenity(int id)
         {
@@ -42,6 +47,7 @@ namespace Async_Inn.Controllers
         // POST: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = ApplicationRoles.PropertyManager)]
         [HttpPost("/api/Amenities")]
         public async Task<ActionResult<AmenityDTO>> PostAmenity(AmenityDTO amenityDTO)
         {
@@ -52,6 +58,7 @@ namespace Async_Inn.Controllers
         // PUT: /api/Amenities/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(Roles = ApplicationRoles.PropertyManager)]
         [HttpPut("/api/Amenities/{id}")]
         public async Task<IActionResult> PutAmenity(int id, AmenityDTO amenityDTO)
         {
@@ -64,6 +71,7 @@ namespace Async_Inn.Controllers
         }
 
         // DELETE: /api/Amenities/{id}
+        [Authorize(Roles = ApplicationRoles.PropertyManager)]
         [HttpDelete("/api/Amenities/{id}")]
         public async Task<ActionResult<AmenityDTO>> DeleteAmenity(int id)
         {

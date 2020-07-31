@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = ApplicationRoles.DistrictManager)]
     [ApiController]
     public class RoomsController : ControllerBase
     {
@@ -72,6 +72,7 @@ namespace Async_Inn.Controllers
         }
 
         // POST: /api/Rooms/{roomId}/Amenity/{amenityId}
+        [Authorize(Policy = "PropertyManagerAndAgent")]
         [HttpPost]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> AddRoomAmenity(int roomId, int amenityId)
@@ -81,6 +82,7 @@ namespace Async_Inn.Controllers
         }
 
         // DELETE: /api/Rooms/{roomId}/Amenity/{amenityId}
+        [Authorize(Policy = "PropertyManagerAndAgent")]
         [HttpDelete]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
