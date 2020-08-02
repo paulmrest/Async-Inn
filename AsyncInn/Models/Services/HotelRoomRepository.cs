@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Async_Inn.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Async_Inn.Models.Services
 {
@@ -37,6 +38,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly 
                 })
                 .ToListAsync();
+            if (hotelRoomDTOs.Count < 1)
+            {
+                return null;
+            }
             foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
             {
                 oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
@@ -57,6 +62,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .ToListAsync();
+            if (hotelRoomDTOsForHotel.Count < 1)
+            {
+                return null;
+            }
             foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOsForHotel)
             {
                 oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
@@ -77,6 +86,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .FirstOrDefaultAsync();
+            if (hotelRoomDTO == null)
+            {
+                return null;
+            }
             hotelRoomDTO.Room = await room.GetRoom(hotelId, amenity);
             return hotelRoomDTO;
         }
@@ -94,6 +107,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .FirstOrDefaultAsync();
+            if (hotelRoomDTO == null)
+            {
+                return null;
+            }
             return hotelRoomDTO;
         }
 
@@ -133,5 +150,10 @@ namespace Async_Inn.Models.Services
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
+
+        //private bool HotelHasRoom(int hotelId, int roomNumber)
+        //{
+
+        //}
     }
 }

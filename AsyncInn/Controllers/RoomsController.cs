@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = ApplicationRoles.DistrictManager)]
     [ApiController]
     public class RoomsController : ControllerBase
     {
@@ -35,6 +34,7 @@ namespace Async_Inn.Controllers
 
         // GET: /api/Rooms
         [HttpGet("/api/Rooms")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<RoomDTO>>> GetRooms()
         {
             return await _room.GetRooms(_amenity);
@@ -42,6 +42,7 @@ namespace Async_Inn.Controllers
 
         // GET: /api/Rooms/{id}
         [HttpGet("/api/Rooms/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<RoomDTO>> GetRoom(int id)
         {
             return await _room.GetRoom(id, _amenity);
@@ -51,6 +52,7 @@ namespace Async_Inn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("/api/Rooms")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<ActionResult<RoomDTO>> PostRoom(RoomDTO roomDTO)
         {
             await _room.Create(roomDTO);
@@ -61,6 +63,7 @@ namespace Async_Inn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("/api/Rooms/{id}")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<IActionResult> PutRoom(int id, RoomDTO roomDTO)
         {
             if (id != roomDTO.Id)
@@ -72,8 +75,8 @@ namespace Async_Inn.Controllers
         }
 
         // POST: /api/Rooms/{roomId}/Amenity/{amenityId}
-        [Authorize(Policy = "PropertyManagerAndAgent")]
         [HttpPost]
+        [Authorize(Policy = "DistrictAndPropertyManagersAndAgents")]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> AddRoomAmenity(int roomId, int amenityId)
         {
@@ -82,8 +85,8 @@ namespace Async_Inn.Controllers
         }
 
         // DELETE: /api/Rooms/{roomId}/Amenity/{amenityId}
-        [Authorize(Policy = "PropertyManagerAndAgent")]
         [HttpDelete]
+        [Authorize(Policy = "DistrictAndPropertyManagersAndAgents")]
         [Route("{roomId}/Amenity/{amenityId}")]
         public async Task<IActionResult> RemoveAmenityFromRoom(int roomId, int amenityId)
         {
@@ -93,6 +96,7 @@ namespace Async_Inn.Controllers
 
         // DELETE: /api/Rooms/{id}
         [HttpDelete("/api/Rooms/{id}")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             await _room.Delete(id);

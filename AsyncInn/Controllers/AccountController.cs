@@ -60,24 +60,21 @@ namespace Async_Inn.Controllers
 
         [Authorize(Roles = ApplicationRoles.DistrictManager)]
         [HttpPost, Route("assign/role")]
-        public async Task<IActionResult> AssignRoleToUser(AssignRoleDTO assignDTO)
+        public async Task<IActionResult> AssignRoleToUser(AssignRoleDTO assignRoleDTO)
         {
-            var user = await _userManager.FindByEmailAsync(assignDTO.Email);
-            await _userManager.AddToRoleAsync(user, assignDTO.Role);
-            return Ok($"{assignDTO.Email} assigned to the role of {assignDTO.Role}");
+            return await UpdateUserRole(assignRoleDTO);
         }
 
         [Authorize(Policy = "DistrictAndPropertyManagers")]
         [HttpPost, Route("assign/agent/role")]
-        public async Task<IActionResult> AssignRoleToAgentUser(AssignRoleDTO assignDTO)
+        public async Task<IActionResult> AssignRoleToAgentUser(AssignRoleDTO assignRoleDTO)
         {
             //get the role of the currently logged in user
             var userRole = User.Claims.Where(x => x.Type == ClaimTypes.Role);
-            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || assignDTO.Role.ToLower() == "agent")
+            //if the District Manager is using the agent route, they can still assign any user to any role
+            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || assignRoleDTO.Role.ToLower() == "agent")
             {
-                var user = await _userManager.FindByEmailAsync(assignDTO.Email);
-                await _userManager.AddToRoleAsync(user, ApplicationRoles.Agent);
-                return Ok($"{assignDTO.Email} assigned to the role of {ApplicationRoles.Agent}");
+                return await UpdateUserRole(assignRoleDTO);
             }
             else
             {
@@ -107,6 +104,17 @@ namespace Async_Inn.Controllers
             return BadRequest("Invalid attempt");
         }
 
+
+        private async Task<IActionResult> UpdateUserRole(AssignRoleDTO assignRoleDTO)
+        {
+            assignRoleDTO.Role = GetRole(assignRoleDTO.Role);
+            var user = await _userManager.FindByEmailAsync(assignRoleDTO.Email);
+            var oldRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, oldRoles);
+            await _userManager.AddToRoleAsync(user, assignRoleDTO.Role);
+            return Ok($"{assignRoleDTO.Email} assigned to the role of {assignRoleDTO.Role}");
+        }
+
         /// <summary>
         /// Private helper method. Sets up new user role from RegisterRTO for the ApplicationUser object.
         /// </summary>
@@ -120,12 +128,14 @@ namespace Async_Inn.Controllers
         {
             //get the role of the currently logged in user
             var userRole = User.Claims.Where(x => x.Type == ClaimTypes.Role);
-            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || registerDTO.Role.ToLower() == ApplicationRoles.Agent.ToLower())
+            if (userRole.FirstOrDefault().Value.ToLower() == ApplicationRoles.DistrictManager.ToLower() || 
+                registerDTO.Role.ToLower() == ApplicationRoles.Agent.ToLower())
             {
-                await _userManager.AddToRoleAsync(user, GetRole(registerDTO));
+                await _userManager.AddToRoleAsync(user, GetRole(registerDTO.Role));
             }
             else
             {
+                await _userManager.DeleteAsync(user);
                 return BadRequest("You are not authorized to create a new user with that role.");
             }
             await _signInManager.SignInAsync(user, false);
@@ -141,24 +151,24 @@ namespace Async_Inn.Controllers
         /// <returns>
         /// string: the string representation of the role from ApplicationRoles
         /// </returns>
-        private string GetRole(RegisterDTO registerDTO)
+        private string GetRole(string role)
         {
-            string role = "";
-            switch (registerDTO.Role.ToLower())
+            string normalizedRole = "";
+            switch (role.ToLower())
             {
                 case "district manager":
-                    role = ApplicationRoles.DistrictManager;
+                    normalizedRole = ApplicationRoles.DistrictManager;
                     break;
                 case "property manager":
-                    role = ApplicationRoles.PropertyManager;
+                    normalizedRole = ApplicationRoles.PropertyManager;
                     break;
                 case "agent":
-                    role = ApplicationRoles.Agent;
+                    normalizedRole = ApplicationRoles.Agent;
                     break;
                 default:
                     break;
             }
-            return role;
+            return normalizedRole;
         }
 
         /// <summary>

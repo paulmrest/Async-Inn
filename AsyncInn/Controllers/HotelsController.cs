@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = ApplicationRoles.DistrictManager)]
     [ApiController]
     public class HotelsController : ControllerBase
     {
@@ -38,16 +37,16 @@ namespace Async_Inn.Controllers
         }
 
         // GET: /api/Hotels
-        [AllowAnonymous]
         [HttpGet("/api/Hotels")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<HotelDTO>>> GetHotels(int id)
         {
             return await _hotel.GetHotels(_hotelRoom, _room, _amenity);
         }
 
         // GET: /api/Hotels/{id}
-        [AllowAnonymous]
         [HttpGet("/api/Hotels/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<HotelDTO>> GetHotel(int id)
         {
             HotelDTO hotelDTO = await _hotel.GetHotel(id, _hotelRoom, _room, _amenity);
@@ -55,8 +54,8 @@ namespace Async_Inn.Controllers
         }
 
         // GET: /api/Hotels/HotelByName/{hotelName}
-        [AllowAnonymous]
         [HttpGet("/api/Hotels/HotelByName/{hotelName}")]
+        [AllowAnonymous]
         public async Task<ActionResult<HotelDTO>> GetHotelByName(string hotelName)
         {
             HotelDTO hotelDTO = await _hotel.GetHotelByName(hotelName, _hotelRoom, _room, _amenity);
@@ -67,6 +66,7 @@ namespace Async_Inn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("/api/Hotels")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<ActionResult<HotelDTO>> PostHotel(HotelDTO hotelDTO)
         {
             await _hotel.Create(hotelDTO);
@@ -77,6 +77,7 @@ namespace Async_Inn.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("/api/Hotels/{id}")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<IActionResult> PutHotel(int id, HotelDTO hotelDTO)
         {
             if (id != hotelDTO.Id)
@@ -89,6 +90,7 @@ namespace Async_Inn.Controllers
 
         // DELETE: /api/Hotels/{id}
         [HttpDelete("/api/Hotels/{id}")]
+        [Authorize(Roles = ApplicationRoles.DistrictManager)]
         public async Task<ActionResult<Hotel>> DeleteHotel(int id)
         {
             await _hotel.Delete(id);
