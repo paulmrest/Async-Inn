@@ -38,13 +38,12 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly 
                 })
                 .ToListAsync();
-            if (hotelRoomDTOs.Count < 1)
+            if (hotelRoomDTOs.Count > 1)
             {
-                return null;
-            }
-            foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
-            {
-                oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+                foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
+                {
+                    oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+                }
             }
             return hotelRoomDTOs;
         }
@@ -150,10 +149,5 @@ namespace Async_Inn.Models.Services
             _context.Entry(hotelRoom).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
-
-        //private bool HotelHasRoom(int hotelId, int roomNumber)
-        //{
-
-        //}
     }
 }

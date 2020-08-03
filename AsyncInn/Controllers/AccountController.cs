@@ -175,13 +175,13 @@ namespace Async_Inn.Controllers
         /// Private helper method. Creates a new JwtSecurityToken from ApplicationUser object.
         /// </summary>
         /// <param name="user">
-        /// 
+        /// ApplicationUser: a user in the web app
         /// </param>
         /// <param name="roles">
-        /// 
+        /// List<string>: a list of strings that correspond to Role names defined in ApplicationRoles
         /// </param>
         /// <returns>
-        /// JwtSecurityToken: 
+        /// JwtSecurityToken: a JwtSecturity token containing the necessary Claims for authentication
         /// </returns>
         private JwtSecurityToken CreateToken(ApplicationUser user, List<string> roles)
         {
@@ -201,6 +201,15 @@ namespace Async_Inn.Controllers
             return token;
         }
 
+        /// <summary>
+        /// Private helper method. Creates and returns a JwtSecurityToken with the List<Claims> claims.
+        /// </summary>
+        /// <param name="claims">
+        /// List<Cliam>: a List of claims to be added to the JwtSecurityToken
+        /// </param>
+        /// <returns>
+        /// JwtSecurityToken: a JwtSecurityToken
+        /// </returns>
         private JwtSecurityToken AuthenticateToken(List<Claim> claims)
         {
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTKey"]));

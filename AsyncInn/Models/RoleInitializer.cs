@@ -18,6 +18,12 @@ namespace Async_Inn.Models
             new IdentityRole{Name = ApplicationRoles.Agent, NormalizedName = ApplicationRoles.Agent.ToUpper(), ConcurrencyStamp = Guid.NewGuid().ToString()},
         };
 
+        /// <summary>
+        /// Seeds Role data into AsyncInnDbContext.
+        /// </summary>
+        /// <param name="serviceProvider">
+        /// IServiceProvider: an object that implements IServiceProvider
+        /// </param>
         public static void SeedData(IServiceProvider serviceProvider)
         {
             using(var dbContext = new AsyncInnDbContext(serviceProvider.GetRequiredService<DbContextOptions<AsyncInnDbContext>>()))
@@ -27,7 +33,13 @@ namespace Async_Inn.Models
             }
         }
 
-        public static void AddRoles(AsyncInnDbContext context)
+        /// <summary>
+        /// Private helper method. Adds Roles to the database.
+        /// </summary>
+        /// <param name="context">
+        /// AsyncInnDbContext: an AsyncInnDbContext object
+        /// </param>
+        private static void AddRoles(AsyncInnDbContext context)
         {
             if (context.Roles.Any()) return;
             foreach (IdentityRole role in Roles)

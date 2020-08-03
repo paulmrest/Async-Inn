@@ -17,6 +17,10 @@ Uses ASP.Net Core Identity API to create users and passwords, and then login usi
 
 Identity: a way to be able to demonstrate who you are to a system. This is frequently done through a username/password combination, a token, two-step verification, and even biometrics.
 
+Employs ASP.Net Core Identity and Authentication to set the level of access required for every CRUD method.
+
+Has xUnit testing for both the AmenityRepository and RoomRepository service files.
+
 ---
 
 ### Getting Started
@@ -63,35 +67,39 @@ Authors:
 
 ### Change Log
 
-#### 2020-27-07
+#### 2020-07-29 - 2020-08-02
+
+- Full authentication implemented for all API routes. Testing of Amenities and Room service files (AmenityRepository.cs and RoomRepository.cs) in place.
+
+#### 2020-07-28
 
 - Supports authentication using ASP.Net Core's Identity API.
 
-#### 2020-27-07
+#### 2020-07-27
 
 - Added full DTO implementation.
 
-#### 2020-26-07
+#### 2020-07-26
 
 - HotelRooms implementation completed.
 
-#### 2020-25-07
+#### 2020-07-25
 
 - Most of HotelRooms implementation complete.
 
-#### 2020-23-07
+#### 2020-07-23
 
 - Attempt at implementing custom routing and navigation properties. Incomplete.
 
-#### 2020-22-07
+#### 2020-07-22
 
 - Controllers are loosely coupled to their entities through dependency injection and interfaces.
 
-#### 2020-21-07
+#### 2020-07-07
 
 - ASP.NET Core Web App framework in place, including DB and seed data. Supports full CRUD through an API client like Postman.
 
-#### 2020-20-07
+#### 2020-07-20
 
 - Added ERD to project (planning database stage) 
 - Initial commit
