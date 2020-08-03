@@ -52,10 +52,13 @@ namespace Async_Inn.Models.Services
                 .Where(x => x.Id == id)                           
                 .Include(x => x.RoomAmenities)     
                 .FirstOrDefaultAsync();
-
+            if (room == null)
+            {
+                return null;
+            }
             RoomDTO roomDTO = await _context.Rooms
                 .Where(x => x.Id == id)
-                .Select(x => new RoomDTO() { Id = x.Id, Name = x.Name, Layout = x.Layout })                                  
+                .Select(x => new RoomDTO() { Id = x.Id, Name = x.Name, Layout = x.Layout })
                 .FirstOrDefaultAsync();
             List<AmenityDTO> amenityDTOs = new List<AmenityDTO>();
             foreach (RoomAmenities oneAmenity in room.RoomAmenities)

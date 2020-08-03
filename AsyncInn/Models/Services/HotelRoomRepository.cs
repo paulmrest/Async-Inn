@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Async_Inn.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Async_Inn.Models.Services
 {
@@ -37,9 +38,12 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly 
                 })
                 .ToListAsync();
-            foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
+            if (hotelRoomDTOs.Count > 1)
             {
-                oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+                foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOs)
+                {
+                    oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
+                }
             }
             return hotelRoomDTOs;
         }
@@ -57,6 +61,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .ToListAsync();
+            if (hotelRoomDTOsForHotel.Count < 1)
+            {
+                return null;
+            }
             foreach (HotelRoomDTO oneHotelRoomDTO in hotelRoomDTOsForHotel)
             {
                 oneHotelRoomDTO.Room = await room.GetRoom(oneHotelRoomDTO.RoomId, amenity);
@@ -77,6 +85,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .FirstOrDefaultAsync();
+            if (hotelRoomDTO == null)
+            {
+                return null;
+            }
             hotelRoomDTO.Room = await room.GetRoom(hotelId, amenity);
             return hotelRoomDTO;
         }
@@ -94,6 +106,10 @@ namespace Async_Inn.Models.Services
                     PetFriendly = x.PetFriendly
                 })
                 .FirstOrDefaultAsync();
+            if (hotelRoomDTO == null)
+            {
+                return null;
+            }
             return hotelRoomDTO;
         }
 
